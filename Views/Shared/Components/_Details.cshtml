@@ -1,0 +1,151 @@
+<style>
+    .detail {
+        flex: 1;
+
+        .user {
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #dddddd35;
+
+            img {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+        }
+
+        .info {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+
+            .option {
+                .title {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+
+                    img {
+                        width: 30px;
+                        height: 30px;
+                        background-color: rgba(17, 25, 40, 0.3);
+                        padding: 10px;
+                        border-radius: 50%;
+                        cursor: pointer;
+                    }
+                }
+
+                .photos {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 15px;
+                    margin-top: 20px;
+
+                    .photoItem {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+
+                        .photoDetail {
+                            display: flex;
+                            align-items: center;
+                            gap: 20px;
+
+                            img {
+                                width: 40px;
+                                height: 40px;
+                                border-radius: 5px;
+                                object-fit: cover;
+                            }
+
+                            span {
+                                font-size: 14px;
+                                color: lightgray;
+                                font-weight: 300;
+                            }
+                        }
+
+                        .icon {
+                            width: 30px;
+                            height: 30px;
+                            background-color: rgba(17, 25, 40, 0.3);
+                            padding: 10px;
+                            border-radius: 50%;
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
+
+            button {
+                padding: 10px;
+                background-color: rgba(230, 74, 105, 0.553);
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: rgba(220, 20, 60, 0.75);
+                }
+
+                &.logout {
+                    background-color: #1a73e8;
+
+                }
+            }
+        }
+    }
+</style>
+
+<div class='detail'>
+    <div class='user'>
+        <img src='~/images/avatar.png' alt='' />
+        <h2>Jane Doe</h2>
+        <p>Lorem ipsum dolor sit amet.</p>
+    </div>
+    <div class='info'>
+        <div class='option'>
+            <div class='title'>
+                <span>Chat Settings</span>
+                <img src='~/images/arrowUp.png' alt='' />
+            </div>
+        </div>
+        <div class='option'>
+            <div class='title'>
+                <span>Privacy & help</span>
+                <img src='~/images/arrowUp.png' alt='' />
+            </div>
+        </div>
+        <div class='option'>
+            <div class='title'>
+                <span>Shared photos</span>
+                <img src='~/images/arrowDown.png' alt='' />
+            </div>
+            <div class='photos'>
+                <div class='photoItem'>
+                    <div class='photoDetail'>
+                        <img src='https://images.pexels.com/photos/7381200/pexels-photo-7381200.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load'
+                            alt='' />
+                        <span>photo_2024_2.png</span>
+                    </div>
+
+                    <img src='~/images/download.png' alt='' class='icon' />
+                </div>
+            </div>
+        </div>
+        <div class='option'>
+            <div class='title'>
+                <span>Shared Files</span>
+                <img src='~/images/arrowUp.png' alt='' />
+            </div>
+        </div>
+        <button>Block User</button>
+        <button class='logout'>Logout</button>
+    </div>
+</div>

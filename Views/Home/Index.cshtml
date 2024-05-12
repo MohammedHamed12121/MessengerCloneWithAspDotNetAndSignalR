@@ -1,0 +1,97 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Title"] = "Home Page";
+    var user = UserManager.GetUserId(User);
+}
+<style>
+    .chat {
+        flex: 2;
+    }
+
+    .list {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .detail {
+        flex: 1;
+    }
+</style>
+
+
+<div class="list">
+    <partial name="components/_UserInfo" />
+    <partial name="components/_ChatList" />
+</div>
+<partial name="components/_Chat" />
+<partial name="components/_Details" />
+
+
+
+
+
+<script>
+    var toId = "6a983990-9b58-46d6-aa2d-473f496aee4c" // ahmed
+    @* var fromId = @user *@
+    var fromId = $("#fromId").val();
+    console.log(fromId)
+    var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+    connection.on("ReceiveMessage", function (fromName, message) {
+        var encodedFrom = $("<div />").text(fromName).html();
+    @* var encodedTo = $("<div />").text(`to the user with id ${toId}`).html(); *@
+        var encodedMsg = $("<div />").text(message).html();
+        console.log(`from ${encodedFrom} ${encodedMsg}`)
+    @* $("#chatBox").append("<p><strong>" + encodedFrom + "</strong>: " + encodedMsg + "</p>"); *@
+        var messagebox = createMessage(encodedMsg)
+        $("#chatBox").append(messagebox)
+
+    });
+
+    $("#sendButton").click(function () {
+    @* var fromId = $("#username").val(); *@
+        var message = $("#message").val();
+        connection.invoke("SendMessage", fromId, toId, message);
+        $("#message").val("").focus();
+    });
+
+    connection.start().then(function () {
+        console.log("Connected!");
+    }).catch(function (err) {
+        console.error(err.toString());
+    });
+
+    const createMessage = (encodedMsg) => {
+        // Create the div element
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+    @* if() *@
+
+        // Create the img element
+        const img = document.createElement('img');
+        img.src = '/images/avatar.png';
+        img.alt = '';
+
+        // Create the div for texts
+        const textsDiv = document.createElement('div');
+        textsDiv.classList.add('texts');
+
+        // Create the p element for the message
+        const p = document.createElement('p');
+        p.textContent = encodedMsg;
+
+        // Create the span element for the timestamp
+        const span = document.createElement('span');
+        span.textContent = '1 min ago';
+
+        // Append elements to their parent
+        textsDiv.appendChild(p);
+        textsDiv.appendChild(span);
+
+        messageDiv.appendChild(img);
+        messageDiv.appendChild(textsDiv);
+        return messageDiv
+    }
+</script>
