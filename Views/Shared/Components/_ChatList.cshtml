@@ -1,7 +1,7 @@
 <style>
     .chatList {
         flex: 1;
-        overflow: scroll;
+        overflow: auto;
 
         .search {
             display: flex;
@@ -17,6 +17,7 @@
                 gap: 20px;
                 border-radius: 10px;
                 padding: 10px;
+                using Microsoft.AspNetCore.Identity;
 
                 input {
                     background-color: transparent;
@@ -44,13 +45,18 @@
         }
 
         .item {
+            a{
+                width: 100%;
+                height: 100%;
             display: flex;
             align-items: center;
             gap: 20px;
             padding: 20px;
             cursor: pointer;
             border-bottom: 1px solid #dddddd35;
-
+            text-decoration: none;
+            color: inherit;
+            
             img {
                 width: 50px;
                 height: 50px;
@@ -72,50 +78,56 @@
                     font-weight: 300;
                 }
             }
+            }
         }
     }
 </style>
 
 
-<div class='chatList'>
+<div class='chatList' id="chatList">
     <div class='search'>
         <div class='searchBar'>
             <img src='~/images/search.png' alt='' />
             <input type='text' placeholder='Search' />
         </div>
-        <img src='~/images/plus.png' alt='' class='add' />
+        <img src='~/images/plus.png' alt='' class="add" id='addButton' />
     </div>
-
-    <div class='item'>
-        <img src='~/images/avatar.png' alt='' />
-        <div class='texts'>
-            <span>Jane Doe</span>
-            <p>Hello</p>
-        </div>
-    </div>
-
-    <div class='item'>
-        <img src='~/images/avatar.png' alt='' />
-        <div class='texts'>
-            <span>Jane Doe</span>
-            <p>Hello</p>
-        </div>
-    </div>
-
-    <div class='item'>
-        <img src='~/images/avatar.png' alt='' />
-        <div class='texts'>
-            <span>Jane Doe</span>
-            <p>Hello</p>
-        </div>
-    </div>
-
-    <div class='item'>
-        <img src='~/images/avatar.png' alt='' />
-        <div class='texts'>
-            <span>Jane Doe</span>
-            <p>Hello</p>
-        </div>
-    </div>
-
 </div>
+
+<script>
+    var plus = true
+    $("#addButton").click(function () {
+        plus = !plus
+        var image = !plus ? "images/minus.png" : "images/plus.png"
+        $("#addButton").attr("src", image);
+    });
+
+    // Ajax call for user list
+
+    var userListData;
+    var chatList = $('#chatList')
+    $.ajax({
+        url: 'http://localhost:5159/api/user',
+        method: 'GET',
+        dataType: 'json',
+        success:  (data) => {
+            userListData = data 
+            userListData.forEach((item) => chatList.append(
+                `<div class='item'>
+                    <a href='/Home/Index?Id=${item.id}'>
+                        <img src='/images/avatar.png' alt='' />
+                        <div class='texts'>
+                            <span>${item.userName}</span>
+                            <p>Hello</p>
+                        </div>
+                        </a>
+                    </div>`))
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+
+
+//asp-area='' asp-controller='Home' asp-action='Index' asp-route-id='${item.Id}
+</script>

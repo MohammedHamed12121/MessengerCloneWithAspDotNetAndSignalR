@@ -1,8 +1,7 @@
-﻿@using Microsoft.AspNetCore.Identity
-@inject UserManager<IdentityUser> UserManager
+﻿@using RealTimeChatApp.ViewModels
+@model IndexViewModel
 @{
     ViewData["Title"] = "Home Page";
-    var user = UserManager.GetUserId(User);
 }
 <style>
     .chat {
@@ -25,7 +24,7 @@
     <partial name="components/_UserInfo" />
     <partial name="components/_ChatList" />
 </div>
-<partial name="components/_Chat" />
+<partial name="components/_Chat" model="@Model"/>
 <partial name="components/_Details" />
 
 
@@ -33,27 +32,35 @@
 
 
 <script>
-    var toId = "6a983990-9b58-46d6-aa2d-473f496aee4c" // ahmed
-    @* var fromId = @user *@
-    var fromId = $("#fromId").val();
-    console.log(fromId)
+
+    @* var toId = $("#toId").val(); *@
+    @* var fromId = $("#fromId").val(); *@
+    var currUserId = $("#currUserId").val();
+    @* console.log(`to user ${toId}`) *@
+    @* console.log(`from user ${fromId}`) *@
+    @* console.log(`current user ${currUserId}`) *@
     var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
-    connection.on("ReceiveMessage", function (fromName, message) {
-        var encodedFrom = $("<div />").text(fromName).html();
+    connection.on("ReceiveMessage", function (fromId, toId, message) {
+        var fromId = fromId
+        var toId = toId
+        
+        @* var encodedFrom = $("<div />").text(fromName).html(); *@
     @* var encodedTo = $("<div />").text(`to the user with id ${toId}`).html(); *@
         var encodedMsg = $("<div />").text(message).html();
-        console.log(`from ${encodedFrom} ${encodedMsg}`)
+        @* console.log(`from ${encodedFrom} ${encodedMsg}`) *@
     @* $("#chatBox").append("<p><strong>" + encodedFrom + "</strong>: " + encodedMsg + "</p>"); *@
-        var messagebox = createMessage(encodedMsg)
+        var messagebox = createMessage(encodedMsg, fromId)
         $("#chatBox").append(messagebox)
 
     });
 
     $("#sendButton").click(function () {
     @* var fromId = $("#username").val(); *@
+        var toUserId = $("#toId").val();
+        var fromUserId = $("#fromId").val();
         var message = $("#message").val();
-        connection.invoke("SendMessage", fromId, toId, message);
+        connection.invoke("SendMessage", fromUserId, toUserId, message);
         $("#message").val("").focus();
     });
 
@@ -63,11 +70,15 @@
         console.error(err.toString());
     });
 
-    const createMessage = (encodedMsg) => {
+    const createMessage = (encodedMsg, fromId) => {
         // Create the div element
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message');
-    @* if() *@
+        if(fromId === currUserId)
+        {
+            messageDiv.classList.add('own');
+        }
+
 
         // Create the img element
         const img = document.createElement('img');

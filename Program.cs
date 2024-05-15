@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RealTimeChatApp;
 using RealTimeChatApp.Data;
+using RealTimeChatApp.Interfaces;
+using RealTimeChatApp.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,9 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddSignalR();
+
+// Repositories
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 
 var app = builder.Build();
 
@@ -43,6 +48,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
+app.MapHub<OnlineUsersHub>("/onlineUsersHub");
 app.MapHub<ChatHub>("/chatHub");
 
 

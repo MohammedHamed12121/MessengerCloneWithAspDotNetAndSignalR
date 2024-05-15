@@ -1,7 +1,13 @@
+
+@using RealTimeChatApp.ViewModels
+@model IndexViewModel
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<IdentityUser> UserManager
+
 @{
-    var user = UserManager.GetUserId(User);
+    var currUserId = UserManager.GetUserId(User);
+    var receiverName = Model.ToUser!.UserName;
+    var receiverId = Model.ToUser!.Id;
 }
 
 <style>
@@ -64,7 +70,7 @@
         .center {
             padding: 20px;
             flex: 1;
-            overflow: scroll;
+            overflow: auto;
             /* TODO: fix this one 👇 */
             /* overflow-x: hidden; */
             display: flex;
@@ -178,7 +184,7 @@
         <div class='user'>
             <img src='~/images/avatar.png' alt='' />
             <div class='texts'>
-                <span>Jane Doe</span>
+                <span>@receiverName</span>
                 <p>lorm ipsum dolar</p>
             </div>
         </div>
@@ -190,89 +196,19 @@
     </div>
 
     <div class='center'  id="chatBox">
-        @* <div class='message own'>
-            <div class='texts'>
-                <p>
-                    Lorem ipsum dolar setOpenEmoji si ajfajfjle ajgaejga; gjejg aeg; egj aiejg dajnbabdnanba aj aj;f
-                    eafjae jfaejgajo df.
-                </p>
-                <span>1 min ago</span>
-            </div>
-        </div>
 
-        <div class='message'>
-            <img src='~/images/avatar.png' alt='' />
-            <div class='texts'>
-                <p>
-                    Lorem ipsum dolar setOpenEmoji si ajfajfjle ajgaejga; gjejg aeg; egj aiejg dajnbabdnanba aj aj;f
-                    eafjae jfaejgajo df.
-                </p>
-                <span>1 min ago</span>
+        @foreach(var message in Model.Messages)
+        {
+            <div class='message @(message.FromUserId == currUserId ? "own" : " " )'>
+                <img src='~/images/avatar.png' alt='' />
+                <div class='texts'>
+                    <p>
+                        @message.Content
+                    </p>
+                    <span>1 min ago</span>
+                </div>
             </div>
-        </div>
-
-        <div class='message own'>
-            <div class='texts'>
-                <p>
-                    Lorem ipsum dolar setOpenEmoji si ajfajfjle ajgaejga; gjejg aeg; egj aiejg dajnbabdnanba aj aj;f
-                    eafjae jfaejgajo df.
-                </p>
-                <span>1 min ago</span>
-            </div>
-        </div>
-
-        <div class='message'>
-            <img src='~/images/avatar.png' alt='' />
-            <div class='texts'>
-                <p>
-                    Lorem ipsum dolar setOpenEmoji si ajfajfjle ajgaejga; gjejg aeg; egj aiejg dajnbabdnanba aj aj;f
-                    eafjae jfaejgajo df.
-                </p>
-                <span>1 min ago</span>
-            </div>
-        </div>
-
-        <div class='message own'>
-            <div class='texts'>
-                <p>
-                    Lorem ipsum dolar setOpenEmoji si ajfajfjle ajgaejga; gjejg aeg; egj aiejg dajnbabdnanba aj aj;f
-                    eafjae jfaejgajo df.
-                </p>
-                <span>1 min ago</span>
-            </div>
-        </div>
-
-        <div class='message'>
-            <img src='~/images/avatar.png' alt='' />
-            <div class='texts'>
-                <p>
-                    Lorem ipsum dolar setOpenEmoji si ajfajfjle ajgaejga; gjejg aeg; egj aiejg dajnbabdnanba aj aj;f
-                    eafjae jfaejgajo df.
-                </p>
-                <span>1 min ago</span>
-            </div>
-        </div>
-
-        <div class='message own'>
-            <div class='texts'>
-                <p>
-                    Lorem ipsum dolar setOpenEmoji si ajfajfjle ajgaejga; gjejg aeg; egj aiejg dajnbabdnanba aj aj;f
-                    eafjae jfaejgajo df.
-                </p>
-                <span>1 min ago</span>
-            </div>
-        </div> *@
-
-        @* <div class='message'>
-            <img src='~/images/avatar.png' alt='' />
-            <div class='texts'>
-                <p>
-                    Lorem ipsum dolar setOpenEmoji si ajfajfjle ajgaejga; gjejg aeg; egj aiejg dajnbabdnanba aj aj;f
-                    eafjae jfaejgajo df.
-                </p>
-                <span>1 min ago</span>
-            </div>
-        </div> *@
+        }
 
     </div>
 
@@ -283,7 +219,9 @@
             <img src='~/images/mic.png' alt='' />
         </div>
             <input type='text' id="message" placeholder='Type a message ...' />
-            <input type="hidden" id="fromId" value="@user" />
+            <input type="hidden" id="currUserId" value="@(currUserId)" />
+            <input type="hidden" id="fromId" value="@(currUserId)" />
+            <input type="hidden" id="toId" value="@(receiverId)" />
         <div class='emoji'>
             <img src='~/images/emoji.png' alt='' />
         </div>

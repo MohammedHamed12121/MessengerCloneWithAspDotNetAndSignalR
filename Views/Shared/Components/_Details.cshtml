@@ -1,3 +1,6 @@
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+
 <style>
     .detail {
         flex: 1;
@@ -106,8 +109,8 @@
 <div class='detail'>
     <div class='user'>
         <img src='~/images/avatar.png' alt='' />
-        <h2>Jane Doe</h2>
-        <p>Lorem ipsum dolor sit amet.</p>
+        <h2>@UserManager.GetUserName(User).Split("@")[0]</h2>
+        @* <p>Lorem ipsum dolor sit amet.</p> *@
     </div>
     <div class='info'>
         <div class='option'>
@@ -137,6 +140,15 @@
 
                     <img src='~/images/download.png' alt='' class='icon' />
                 </div>
+                <div class='photoItem'>
+                    <div class='photoDetail'>
+                        <img src='https://images.pexels.com/photos/7381200/pexels-photo-7381200.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load'
+                            alt='' />
+                        <span>photo_2024_2.png</span>
+                    </div>
+
+                    <img src='~/images/download.png' alt='' class='icon' />
+                </div>
             </div>
         </div>
         <div class='option'>
@@ -146,6 +158,10 @@
             </div>
         </div>
         <button>Block User</button>
-        <button class='logout'>Logout</button>
+        @* <button class='logout'>Logout</button> *@
+
+        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <button  type="submit" class="nav-link btn btn-link" style="width: 100%;">Logout</button>
+        </form>
     </div>
 </div>

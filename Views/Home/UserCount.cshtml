@@ -1,0 +1,41 @@
+@{
+    ViewData["Title"] = "UserCount";
+}
+
+<div id="usersOnline">
+
+</div>
+
+
+<script>
+
+    //get users online
+    //
+    //"user strict";
+
+    var conn = new signalR.HubConnectionBuilder().withUrl("/onlineUsersHub").build();
+
+    //start connection
+    conn.start().then(function () {
+
+        console.log("start");
+        @* conn.invoke("SendUsersCounter") *@
+        conn.invoke("SendUsersCounter").catch(function (err) {
+            console.error(err.toString());
+        })
+
+    }).catch(
+        function (err) {
+            console.error(err.toString());
+        }
+    );
+
+    
+    @* conn.invoke("SendUsersCounter") *@
+    //receive msg from server
+    //write function name
+    conn.on("GetUsersCounter", function (usersCounter) {
+        console.log(`the count is ${usersCounter}`)
+        document.getElementById("usersOnline").innerHTML = usersCounter;
+    });
+</script>
