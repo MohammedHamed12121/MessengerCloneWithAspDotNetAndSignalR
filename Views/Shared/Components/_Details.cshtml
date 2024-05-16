@@ -1,5 +1,6 @@
 @using Microsoft.AspNetCore.Identity
-@inject UserManager<IdentityUser> UserManager
+@* @inject UserManager<IdentityUser> UserManager *@
+@model IdentityUser
 
 <style>
     .detail {
@@ -109,7 +110,7 @@
 <div class='detail'>
     <div class='user'>
         <img src='~/images/avatar.png' alt='' />
-        <h2>@UserManager.GetUserName(User).Split("@")[0]</h2>
+        <h2>@Model.UserName.Split("@")[0]</h2>
         @* <p>Lorem ipsum dolor sit amet.</p> *@
     </div>
     <div class='info'>

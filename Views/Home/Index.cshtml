@@ -25,7 +25,7 @@
     <partial name="components/_ChatList" />
 </div>
 <partial name="components/_Chat" model="@Model"/>
-<partial name="components/_Details" />
+<partial name="components/_Details" model="@Model.ToUser"/>
 
 
 
@@ -33,30 +33,22 @@
 
 <script>
 
-    @* var toId = $("#toId").val(); *@
-    @* var fromId = $("#fromId").val(); *@
     var currUserId = $("#currUserId").val();
-    @* console.log(`to user ${toId}`) *@
-    @* console.log(`from user ${fromId}`) *@
-    @* console.log(`current user ${currUserId}`) *@
     var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
     connection.on("ReceiveMessage", function (fromId, toId, message) {
         var fromId = fromId
         var toId = toId
         
-        @* var encodedFrom = $("<div />").text(fromName).html(); *@
-    @* var encodedTo = $("<div />").text(`to the user with id ${toId}`).html(); *@
         var encodedMsg = $("<div />").text(message).html();
-        @* console.log(`from ${encodedFrom} ${encodedMsg}`) *@
-    @* $("#chatBox").append("<p><strong>" + encodedFrom + "</strong>: " + encodedMsg + "</p>"); *@
         var messagebox = createMessage(encodedMsg, fromId)
         $("#chatBox").append(messagebox)
+
+        ajaxCallForData()
 
     });
 
     $("#sendButton").click(function () {
-    @* var fromId = $("#username").val(); *@
         var toUserId = $("#toId").val();
         var fromUserId = $("#fromId").val();
         var message = $("#message").val();

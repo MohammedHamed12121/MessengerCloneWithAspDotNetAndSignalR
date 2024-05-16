@@ -84,13 +84,21 @@
 </style>
 
 
-<div class='chatList' id="chatList">
+<div class='chatList'
+ @* id="chatList" *@
+>
+    <div style="display: flex; flex-direction:column;">
+
     <div class='search'>
         <div class='searchBar'>
             <img src='~/images/search.png' alt='' />
             <input type='text' placeholder='Search' />
         </div>
         <img src='~/images/plus.png' alt='' class="add" id='addButton' />
+    </div>
+    <div id="chatList">
+
+    </div>
     </div>
 </div>
 
@@ -103,31 +111,32 @@
     });
 
     // Ajax call for user list
+    
+    const ajaxCallForData = () => {
+        var chatList = $('#chatList')
+        chatList.html("")
+        $.ajax({
+            url: 'http://localhost:5159/api/user',
+            method: 'GET',
+            dataType: 'json',
+            success:  (data) => {
+                data.messagesObject.forEach((item) => chatList.append(
+                    `<div class='item'>
+                        <a href='/Home/Index?Id=${data.curUserId == item.fromUserId ? item.toUserId : item.fromUserId}'>
+                            <img src='/images/avatar.png' alt='' />
+                            <div class='texts'>
+                                <span>${data.curUserId == item.fromUserId ? item.toUser.userName.split("@@")[0] : item.fromUser.userName.split("@@")[0]}</span>
+                                <p>${item.content.slice(0,35)}</p>
+                             </div>
+                            </a>
+                        </div>`))
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
 
-    var userListData;
-    var chatList = $('#chatList')
-    $.ajax({
-        url: 'http://localhost:5159/api/user',
-        method: 'GET',
-        dataType: 'json',
-        success:  (data) => {
-            userListData = data 
-            userListData.forEach((item) => chatList.append(
-                `<div class='item'>
-                    <a href='/Home/Index?Id=${item.id}'>
-                        <img src='/images/avatar.png' alt='' />
-                        <div class='texts'>
-                            <span>${item.userName}</span>
-                            <p>Hello</p>
-                        </div>
-                        </a>
-                    </div>`))
-        },
-        error: function (xhr, status, error) {
-            console.error('Error:', error);
-        }
-    });
+    ajaxCallForData()
 
-
-//asp-area='' asp-controller='Home' asp-action='Index' asp-route-id='${item.Id}
 </script>

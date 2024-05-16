@@ -25,7 +25,7 @@ public class HomeController : Controller
         _context = context;
     }
 
-    public IActionResult Index(string id)
+    public async Task<IActionResult> Index(string id)
     {
         // get current user id
         var userId = _userManager.GetUserId(User);
@@ -40,12 +40,7 @@ public class HomeController : Controller
         var receiverId = receiver.Id;
 
         // get the messages 
-        var messages = _context.Messages
-                               .Where(u => u.FromUserId == userId && u.ToUserId == receiverId
-                                        || u.FromUserId == receiverId && u.ToUserId == userId
-                               )
-                               .OrderBy(u => u.CreatedAt)
-                               .ToList();
+        var messages = await _messageRepo.GetAllAsync(userId, receiverId);
         
         var indexVM = new IndexViewModel(){
             ToUser = receiver,

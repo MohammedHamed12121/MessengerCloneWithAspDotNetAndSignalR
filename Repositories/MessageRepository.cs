@@ -29,10 +29,16 @@ namespace RealTimeChatApp.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<List<Message>> GetAllAsync()
+        public async Task<List<Message>> GetAllAsync(string userId, string receiverId)
         {
-            return await _context.Messages.ToListAsync();
-
+            return await _context.Messages
+                               .Where(m => m.FromUserId == userId && m.ToUserId == receiverId
+                                        || m.FromUserId == receiverId && m.ToUserId == userId
+                               )
+                               .OrderBy(m => m.CreatedAt)
+                               .Include(m => m.ToUser)
+                               .Include(m => m.FromUser)
+                               .ToListAsync();
         }
 
         public Message GetById(int id)

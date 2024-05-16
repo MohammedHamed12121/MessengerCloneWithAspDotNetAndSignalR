@@ -8,7 +8,7 @@ namespace RealTimeChatApp.Interfaces
 {
     public interface IMessageRepository
     {
-        Task<List<Message>> GetAllAsync();
+        Task<List<Message>> GetAllAsync(string userId, string receiverId);
         Message GetById(int id);
         bool Add(Message message);
         bool Update(int id);
